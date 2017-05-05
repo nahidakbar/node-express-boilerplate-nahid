@@ -36,6 +36,14 @@ module.exports = function(config_)
         'default': true,
         'description': 'Enable CSP or not'
       },
+      'csp-script-src': {
+        'type': 'array',
+        'description': 'Specify script src'
+      },
+      'csp-frame-src': {
+        'type': 'array',
+        'description': 'Specify frame src'
+      },
       'compression': {
         'default': true,
         'description': 'Enable Compression or not'
@@ -68,21 +76,32 @@ module.exports = function(config_)
 
   // disable tech revealing header
   app.disable('x-powered-by');
+  app.disable('etag');
   
   // add content security policy
   if (config.csp)
   {
+    const directives = {
+      'default-src': ['self', 'unsafe-inline']
+    }
+    if (config.cspScriptSrc && config.cspScriptSrc.length > 0)
+    {
+      directives['script-src'] = ['self'].concat(config.cspScriptSrc);
+    }
+    if (config.cspFrameSrc && config.cspFrameSrc.length > 0)
+    {
+      directives['child-src'] = ['self'].concat(config.cspFrameSrc);
+    }
+    console.log(directives);
     csp.extend(app, {
       policy: {
-        directives: {
-          'default-src': ['self', 'unsafe-inline']
-        }
+        directives
       }
     });
   }
   
   // cross origin api/content access
-  if (config.csp)
+  if (config.cors)
   {
     app.use(cors({}));
   }
@@ -98,7 +117,7 @@ module.exports = function(config_)
     }
     else
     {
-      if (config.etag)
+      if (config.etag && req.path && req.path.indexOf('/api') === -1)
       {
         res.header('ETag', config.etag)
           .header('Cache-Control', 'public, max-age=1800');
