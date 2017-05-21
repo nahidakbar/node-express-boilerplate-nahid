@@ -9,7 +9,6 @@ const express = require('express');
 const cors = require('express-cors');
 const csp = require('express-csp');
 const compression = require('compression');
-const session = require('express-session');
 
 module.exports = function(config_)
 {
@@ -40,17 +39,13 @@ module.exports = function(config_)
         'type': 'array',
         'description': 'Specify script src'
       },
-      'csp-frame-src': {
+      'csp-child-src': {
         'type': 'array',
-        'description': 'Specify frame src'
+        'description': 'Specify child src'
       },
       'compression': {
-        'default': true,
-        'description': 'Enable Compression or not'
-      },
-      'sessions': {
         'default': false,
-        'description': 'Enable Sessions or not'
+        'description': 'Enable Compression or not'
       },
       'etag': {
         'default': Date.now().toString(16),
@@ -88,11 +83,10 @@ module.exports = function(config_)
     {
       directives['script-src'] = ['self'].concat(config.cspScriptSrc);
     }
-    if (config.cspFrameSrc && config.cspFrameSrc.length > 0)
+    if (config.cspChildSrc && config.cspChildSrc.length > 0)
     {
-      directives['child-src'] = ['self'].concat(config.cspFrameSrc);
+      directives['child-src'] = ['self'].concat(config.cspChildSrc);
     }
-    console.log(directives);
     csp.extend(app, {
       policy: {
         directives
@@ -127,16 +121,6 @@ module.exports = function(config_)
     }
   });
 
-  if (config.sessions)
-  {
-    app.use(session({
-      name: Date.now().toString(16),
-      secret: Date.now().toString(16),
-      resave: false,
-      saveUninitialized: true
-    }))
-  }
-  
   if (config.compression)
   {
     app.use(compression({
@@ -166,7 +150,7 @@ module.exports = function(config_)
   }
 
   const initialise = () => app.listen(config.port,  () => console.log(`${config_.applicationName} is listening on port ${config.port}!`));
-  
+
   if (config_.initialise)
   {
     config_.initialise(config, initialise);
