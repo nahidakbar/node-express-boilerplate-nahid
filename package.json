@@ -1,6 +1,6 @@
 {
   "name": "node-express-boilerplate-nahid",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Boilerplate code for basic express project with parameter parsing and security/helper bits.",
   "main": "index.js",
   "scripts": {

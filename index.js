@@ -97,7 +97,7 @@ module.exports = function(config_)
   // cross origin api/content access
   if (config.cors)
   {
-    app.use(cors({}));
+    app.use(cors());
   }
   
   app.use(function(req, res, next)
@@ -117,6 +117,8 @@ module.exports = function(config_)
           .header('Cache-Control', 'public, max-age=1800');
       }
       res.header('X-XSS-Protection', '1; mode=block');
+      res.header('X-Content-Type-Options', 'nosniff');
+      res.header('X-Frame-Options', 'SAMEORIGIN');
       next();
     }
   });
