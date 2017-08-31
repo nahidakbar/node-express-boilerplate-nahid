@@ -84,24 +84,25 @@ module.exports = function(config_)
   // add content security policy
   if (config.csp)
   {
+    const default_directives =  ['self', 'unsafe-inline'];
     const directives = {
-      'default-src': ['self', 'unsafe-inline']
+      'default-src': default_directives
     }
     if (config.cspScriptSrc && config.cspScriptSrc.length > 0)
     {
-      directives['script-src'] = ['self'].concat(config.cspScriptSrc);
+      directives['script-src'] = default_directives.concat(config.cspScriptSrc);
     }
     if (config.cspChildSrc && config.cspChildSrc.length > 0)
     {
-      directives['child-src'] = ['self'].concat(config.cspChildSrc);
+      directives['child-src'] = default_directives.concat(config.cspChildSrc);
     }
     if (config.cspStyleSrc && config.cspStyleSrc.length > 0)
     {
-      directives['style-src'] = ['self'].concat(config.cspStyleSrc);
+      directives['style-src'] = default_directives.concat(config.cspStyleSrc);
     }
     if (config.cspFontSrc && config.cspFontSrc.length > 0)
     {
-      directives['font-src'] = ['self'].concat(config.cspFontSrc);
+      directives['font-src'] = default_directives.concat(config.cspFontSrc);
     }
     csp.extend(app, {
       policy: {
