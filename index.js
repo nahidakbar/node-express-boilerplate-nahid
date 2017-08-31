@@ -43,6 +43,14 @@ module.exports = function(config_)
         'type': 'array',
         'description': 'Specify child src'
       },
+      'csp-style-src': {
+        'type': 'array',
+        'description': 'Specify style src'
+      },
+      'csp-font-src': {
+        'type': 'array',
+        'description': 'Specify font src'
+      },
       'compression': {
         'default': false,
         'description': 'Enable Compression or not'
@@ -86,6 +94,14 @@ module.exports = function(config_)
     if (config.cspChildSrc && config.cspChildSrc.length > 0)
     {
       directives['child-src'] = ['self'].concat(config.cspChildSrc);
+    }
+    if (config.cspStyleSrc && config.cspStyleSrc.length > 0)
+    {
+      directives['style-src'] = ['self'].concat(config.cspStyleSrc);
+    }
+    if (config.cspFontSrc && config.cspFontSrc.length > 0)
+    {
+      directives['font-src'] = ['self'].concat(config.cspFontSrc);
     }
     csp.extend(app, {
       policy: {
