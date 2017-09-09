@@ -1,10 +1,14 @@
 {
   "name": "node-express-boilerplate-nahid",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "Boilerplate code for basic express project with parameter parsing and security/helper bits.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jbn test",
+    "init": "jbn init",
+    "docs": "jbn docs",
+    "form": "jbn form",
+    "lint": "jbn lint"
   },
   "repository": {
     "type": "git",
@@ -28,8 +32,11 @@
   "dependencies": {
     "compression": "^1.6.2",
     "express": "^4.14.1",
-    "express-cors": "0.0.3",
+    "cors": "2.8.4",
     "express-csp": "0.0.4",
     "yargs": "^6.6.0"
+  },
+  "devDependencies": {
+    "jbn": "latest"
   }
 }

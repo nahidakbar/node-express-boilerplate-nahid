@@ -6,11 +6,11 @@
 const yargs = require('yargs');
 
 const express = require('express');
-const cors = require('express-cors');
+const cors = require('cors');
 const csp = require('express-csp');
 const compression = require('compression');
 
-module.exports = function(config_)
+module.exports = function (config_)
 {
   //////////
   // help and config
@@ -56,7 +56,8 @@ module.exports = function(config_)
         'description': 'Enable Compression or not'
       },
       'etag': {
-        'default': Date.now().toString(16),
+        'default': Date.now()
+          .toString(16),
         'description': 'Enable Static ETAG or not'
       },
       'help': {
@@ -80,29 +81,30 @@ module.exports = function(config_)
   // disable tech revealing header
   app.disable('x-powered-by');
   app.disable('etag');
-  
+
   // add content security policy
   if (config.csp)
   {
-    const default_directives =  ['self', 'unsafe-inline'];
+    const defaultDirectives = ['self', 'unsafe-inline'];
     const directives = {
-      'default-src': default_directives
+      'default-src': defaultDirectives
     }
+
     if (config.cspScriptSrc && config.cspScriptSrc.length > 0)
     {
-      directives['script-src'] = default_directives.concat(config.cspScriptSrc);
+      directives['script-src'] = defaultDirectives.concat(config.cspScriptSrc);
     }
     if (config.cspChildSrc && config.cspChildSrc.length > 0)
     {
-      directives['child-src'] = default_directives.concat(config.cspChildSrc);
+      directives['child-src'] = defaultDirectives.concat(config.cspChildSrc);
     }
     if (config.cspStyleSrc && config.cspStyleSrc.length > 0)
     {
-      directives['style-src'] = default_directives.concat(config.cspStyleSrc);
+      directives['style-src'] = defaultDirectives.concat(config.cspStyleSrc);
     }
     if (config.cspFontSrc && config.cspFontSrc.length > 0)
     {
-      directives['font-src'] = default_directives.concat(config.cspFontSrc);
+      directives['font-src'] = defaultDirectives.concat(config.cspFontSrc);
     }
     csp.extend(app, {
       policy: {
@@ -110,21 +112,21 @@ module.exports = function(config_)
       }
     });
   }
-  
+
   // cross origin api/content access
   if (config.cors)
   {
     app.use(cors());
   }
-  
-  app.use(function(req, res, next)
+
+  app.use(function (req, res, next)
   {
     res.sendDate = false;
     if (config.etag && req.headers['if-none-match'] === config.etag)
     {
       res.status(304)
-         .send()
-         .end();
+        .send()
+        .end();
     }
     else
     {
@@ -142,21 +144,22 @@ module.exports = function(config_)
 
   if (config.compression)
   {
+    /*eslint no-underscore-dangle: ["error", { "allow": ["_headers"] }]*/
     app.use(compression({
       level: 9,
-      filter: (req, res) => res._headers['content-encoding'] === undefined,
+      filter: (req, res) => typeof res._headers['content-encoding'] === 'undefined',
       threshold: 0
     }));
   }
-  
-  config.applicationName = config_.applicationName;
+
+  config.applicationName = config_.applicationName || 'Unspecified';
   config.express = express;
   config.app = app;
 
   // additional packages and stuff
-  if (config.setup)
+  if (config_.setup)
   {
-    config.setup(config);
+    config_.setup(config);
   }
 
   // content
@@ -168,7 +171,10 @@ module.exports = function(config_)
     }));
   }
 
-  const initialise = () => app.listen(config.port,  () => console.log(`${config_.applicationName} is listening on port ${config.port}!`));
+  const initialise = () => 
+{
+    config.server = app.listen(config.port, () => console.log(`${config.applicationName} is listening on port ${config.port}!`));
+  }
 
   if (config_.initialise)
   {
@@ -179,4 +185,5 @@ module.exports = function(config_)
     initialise();
   }
 
+  return config;
 };
