@@ -1,6 +1,6 @@
 {
   "name": "node-express-boilerplate-nahid",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Boilerplate code for basic express project with parameter parsing and security/helper bits.",
   "main": "index.js",
   "scripts": {
@@ -19,7 +19,7 @@
     "node",
     "boilerplate"
   ],
-  "author": "Nahid Akbar",
+  "author": "Nahid Akbar <mail@nahidakbar.net> (http://nahidakbar.net/)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/nahidakbar/node-express-boilerplate-nahid/issues"
@@ -31,8 +31,9 @@
   "engineStrict": true,
   "dependencies": {
     "compression": "^1.6.2",
-    "express": "^4.14.1",
     "cors": "2.8.4",
+    "dotenv": "^5.0.1",
+    "express": "^4.14.1",
     "express-csp": "0.0.4",
     "yargs": "^6.6.0"
   },

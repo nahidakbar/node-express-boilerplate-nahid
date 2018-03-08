@@ -10,6 +10,8 @@ const cors = require('cors');
 const csp = require('express-csp');
 const compression = require('compression');
 
+require('dotenv').config();
+
 module.exports = function (config_)
 {
   //////////
@@ -171,7 +173,7 @@ module.exports = function (config_)
     }));
   }
 
-  const initialise = () => 
+  const initialise = () =>
 {
     config.server = app.listen(config.port, () => console.log(`${config.applicationName} is listening on port ${config.port}!`));
   }
